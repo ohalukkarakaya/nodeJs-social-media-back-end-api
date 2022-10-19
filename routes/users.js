@@ -4,7 +4,7 @@ const User = require("../models/User");
 
 // /PUT Update User
 router.put("/:id", async (req, res) => {
-    if(req.body.userId === req.params.id || req.body.isAdmin){
+    if(req.header("userId") === req.params.id || req.body.isAdmin){
         if(req.body.password){
             try{
                 const salt = await bcrypt.genSalt(10);
@@ -31,7 +31,7 @@ router.put("/:id", async (req, res) => {
 
 //DELETE user
 router.delete("/:id", async (req, res) => {
-    if(req.body.userId === req.params.id || req.body.isAdmin){
+    if(req.header("userId") === req.params.id || req.body.isAdmin){
         try{
             const user = await User.findByIdAndDelete(
                 req.params.id,
@@ -56,8 +56,28 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-//get all users
-//follow a user
-//unfollow a user
+//Follow user
+router.put("/:id/follow", async (req, res) => {
+    console.log(req.header("userId"));
+    if(req.header("userId") !== req.params.id){
+        try{
+            const user = await User.findById(req.params.id);
+            const currentUser = await User.findById(req.header("userId"));
+            if(!user.followers.includes(req.body.userId)){
+                await user.updateOne({ $push: { followers: req.header("userId") } });
+                await currentUser.updateOne({ $push: { following: req.params.id } });
+                res.status(200).json("user has been followed");
+            }else{
+                res.status(403).json("you already follow this user");
+            }
+        }catch(err){
+            res.status(500).json(err);
+        }
+    }else{
+        res.status(403).json("you can't follow your self!");
+    }
+});
+
+//unfollow user
 
 module.exports = router
