@@ -1,0 +1,27 @@
+{
+  "name": "node_social_media_back_end",
+  "version": "1.0.0",
+  "description": "social media back end",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ohalukkarakaya/nodeJs-social-media-back-end-api.git"
+  },
+  "author": "Özgür Haluk KARAKAYA",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ohalukkarakaya/nodeJs-social-media-back-end-api/issues"
+  },
+  "homepage": "https://github.com/ohalukkarakaya/nodeJs-social-media-back-end-api#readme",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "helmet": "^6.0.0",
+    "mongoose": "^6.6.5",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.20"
+  }
+}
