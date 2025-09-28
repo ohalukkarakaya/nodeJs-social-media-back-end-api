@@ -137,6 +137,42 @@ Use this token in the `Authorization` header as `Bearer <token>` for all protect
 
 ## 📈 System Flow Diagram
 ```
-[ Client ] → [ API Endpoints ] → [ MongoDB Database ]
+flowchart LR
+  U[Client] -->|Auth: Bearer JWT| A[API Gateway/Express]
+  A --> M[Auth Middleware]
+  A --> P[Users/Posts Controllers]
+  P --> D[(MongoDB)]
+  D --> P --> A --> U
 ```
+
+---
+
+## Follow & Like Sequence
+
+```
+sequenceDiagram
+  participant U as User (Caller)
+  participant API as API
+  participant DB as MongoDB
+
+  U->>API: PUT /api/users/:targetId/follow (Bearer JWT)
+  API->>DB: add follower -> target, add following -> caller
+  DB-->>API: OK
+  API-->>U: 200 {message: "followed"}
+
+  U->>API: PUT /api/post/:postId/like (Bearer JWT)
+  API->>DB: toggle like (add/remove caller in likes[])
+  DB-->>API: OK (state)
+  API-->>U: 200 {message: "liked" | "unliked"}
+```
+
+---
+
+## ⚠️ Error Handling
+
+- `401`: Invalid/missing token
+- `403`: Unauthorized action (updating someone else's profile, etc.)
+- `404`: User/post not found
+- `409`: Already followed/already liked
+- `500`: Server error
 
