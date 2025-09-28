@@ -136,7 +136,7 @@ Use this token in the `Authorization` header as `Bearer <token>` for all protect
 ---
 
 ## 📈 System Flow Diagram
-```
+```mermaid
 flowchart LR
   U[Client] -->|Auth: Bearer JWT| A[API Gateway/Express]
   A --> M[Auth Middleware]
@@ -149,7 +149,7 @@ flowchart LR
 
 ## Follow & Like Sequence
 
-```
+```mermaid
 sequenceDiagram
   participant U as User (Caller)
   participant API as API
