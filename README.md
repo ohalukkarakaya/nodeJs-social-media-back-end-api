@@ -1,36 +1,157 @@
-# nodeJs-social-media-back-end-api
-social media back-end
+# 📱 Social Media Backend API
 
-# Users
+This project is a **Node.js + Express + MongoDB** backend for a simple social media application.  
+It includes user authentication, following/unfollowing users, creating posts, and liking posts.
 
-| Route | HTTP Verb	 | POST body & header	 | Description	 |
-| --- | --- | --- | --- |
-| /api/auth/register | `POST` | body: { username: 'foo', email:'test@email.com', password: '1234' } | Creates a new user. |
-| /api/auth/login | `POST` | body: { email: 'test@email.com', password:'1234' } | For Login. |
-| /api/users/:user_id | `PUT` | header: {userId: 'user Id'}, body: { username: 'TestUser', email:'test@email.com', password: 'password', profilePicture: 'STRING', coverPicture: 'STRING', isAdmin: false, desc: 'Test Description' } | For Update User Infos. |
-| /api/users/:user_id | `DELETE` | header: {userId: 'user Id'} | For Delete User. |
-| /api/users/:user_id | `GET` | Empty | For Get One User. |
+---
 
-# Follow & UnFollow
+## 🚀 Features
+- User registration & authentication (JWT)  
+- User profile management (update, delete, get user)  
+- Follow / unfollow other users  
+- Create, update, delete posts  
+- Timeline feature: see posts from followed users  
+- Like / unlike posts  
 
-| Route | HTTP Verb	 | POST body & header	 | Description	 |
-| --- | --- | --- | --- |
-| /api/users/:target_user_id/follow | `PUT` | header: {userId: 'userId'} | follows if user doesn't allready follows target user. |
-| /api/users/:target_user_id/unfollow | `PUT` | header: {userId: 'userId'} | unfollows if user allready follows target user. |
+---
 
-# Post
+## 🛠️ Installation
 
-| Route | HTTP Verb	 | POST body & header	 | Description	 |
-| --- | --- | --- | --- |
-| /api/post/:post_id| `GET` | Empty | gets one spesific post |
-| /api/post| `POST` | body: {userId: 'userId', desc: 'STRING', img: 'STRİNG'} | creates new post |
-| /api/post/:post_id| `PUT` | body: {userId: 'userId', desc: 'STRING', img: 'STRİNG'} | updates post |
-| /api/post/:post_id| `DELETE` | header: {userId: 'userId'} | deletes post |
-| /api/post/timeline/all| `GET` | header: {userId: 'userId'} | gets all posts which belongs to followed users |
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/ohalukkarakaya/nodeJs-social-media-back-end-api.git
+   cd nodeJs-social-media-back-end-api
+   ```
 
-# Like & UnLike
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-| Route | HTTP Verb	 | POST body & header	 | Description	 |
-| --- | --- | --- | --- |
-| /api/post/post_id/like| `PUT` | header: {userId: 'userId'} | likes a post if user didin't like allready but unlikes if so. |
+3. Create a `.env` file with the following variables:
+   ```env
+   PORT=3000
+   MONGO_URI=mongodb://localhost:27017/socialmedia
+   JWT_SECRET=yourSecretKey
+   ```
 
+4. Start the server:
+   ```bash
+   npm start
+   ```
+   The API will be available at `http://localhost:3000/`
+
+---
+
+## 👤 Authentication
+
+### Register
+```http
+POST /api/auth/register
+Content-Type: application/json
+
+{
+  "username": "foo",
+  "email": "foo@email.com",
+  "password": "1234"
+}
+```
+
+✅ **Response**
+```json
+{
+  "message": "User created successfully",
+  "user": {
+    "id": "603dcd8d9f1b2a001f6b6e91",
+    "username": "foo",
+    "email": "foo@email.com"
+  }
+}
+```
+
+### Login
+```http
+POST /api/auth/login
+Content-Type: application/json
+
+{
+  "email": "foo@email.com",
+  "password": "1234"
+}
+```
+
+✅ **Response**
+```json
+{
+  "status": true,
+  "token": "eyJhbGciOiJIUzI1..."
+}
+```
+
+Use this token in the `Authorization` header as `Bearer <token>` for all protected routes.
+
+---
+
+## 👥 User Routes
+
+| Route | Method | Body / Header | Description |
+|-------|--------|---------------|-------------|
+| `/api/users/:id` | `PUT` | header: `{ userId }`, body: `{ username, email, profilePicture, coverPicture, isAdmin, desc }` | Update user info |
+| `/api/users/:id` | `DELETE` | header: `{ userId }` | Delete user |
+| `/api/users/:id` | `GET` | – | Get a single user |
+
+---
+
+## ➕ Follow / Unfollow
+
+| Route | Method | Header | Description |
+|-------|--------|--------|-------------|
+| `/api/users/:targetId/follow` | `PUT` | `{ userId }` | Follow another user |
+| `/api/users/:targetId/unfollow` | `PUT` | `{ userId }` | Unfollow a user |
+
+---
+
+## 📝 Post Routes
+
+| Route | Method | Body / Header | Description |
+|-------|--------|---------------|-------------|
+| `/api/post/:id` | `GET` | – | Get a specific post |
+| `/api/post` | `POST` | `{ userId, desc, img }` | Create a new post |
+| `/api/post/:id` | `PUT` | `{ userId, desc, img }` | Update a post |
+| `/api/post/:id` | `DELETE` | header: `{ userId }` | Delete a post |
+| `/api/post/timeline/all` | `GET` | header: `{ userId }` | Get timeline (posts from followed users) |
+
+---
+
+## 👍 Like / Unlike
+
+| Route | Method | Header | Description |
+|-------|--------|--------|-------------|
+| `/api/post/:id/like` | `PUT` | `{ userId }` | Like/unlike a post |
+
+✅ **Example**
+```http
+PUT /api/post/609d7e2f8a1f1c001f9c0d42/like
+Header: { "userId": "603dcd8d9f1b2a001f6b6e91" }
+```
+
+Response if liked:
+```json
+{ "message": "The post has been liked" }
+```
+
+Response if unliked:
+```json
+{ "message": "The post has been unliked" }
+```
+
+---
+
+## 📊 Example Usage Flow
+
+1. Register a new user  
+2. Login and receive a JWT token  
+3. Follow another user  
+4. Create a new post  
+5. Fetch your timeline to see posts from followed users  
+6. Like a post  
