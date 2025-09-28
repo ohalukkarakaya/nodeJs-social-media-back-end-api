@@ -5,6 +5,11 @@ It includes user authentication, following/unfollowing users, creating posts, an
 
 ---
 
+## 🎯 Intended Audience
+This documentation is intended for **developers** building or testing social media applications.
+
+---
+
 ## 🚀 Features
 - User registration & authentication (JWT)  
 - User profile management (update, delete, get user)  
@@ -54,18 +59,6 @@ Content-Type: application/json
   "username": "foo",
   "email": "foo@email.com",
   "password": "1234"
-}
-```
-
-✅ **Response**
-```json
-{
-  "message": "User created successfully",
-  "user": {
-    "id": "603dcd8d9f1b2a001f6b6e91",
-    "username": "foo",
-    "email": "foo@email.com"
-  }
 }
 ```
 
@@ -129,22 +122,6 @@ Use this token in the `Authorization` header as `Bearer <token>` for all protect
 |-------|--------|--------|-------------|
 | `/api/post/:id/like` | `PUT` | `{ userId }` | Like/unlike a post |
 
-✅ **Example**
-```http
-PUT /api/post/609d7e2f8a1f1c001f9c0d42/like
-Header: { "userId": "603dcd8d9f1b2a001f6b6e91" }
-```
-
-Response if liked:
-```json
-{ "message": "The post has been liked" }
-```
-
-Response if unliked:
-```json
-{ "message": "The post has been unliked" }
-```
-
 ---
 
 ## 📊 Example Usage Flow
@@ -155,3 +132,11 @@ Response if unliked:
 4. Create a new post  
 5. Fetch your timeline to see posts from followed users  
 6. Like a post  
+
+---
+
+## 📈 System Flow Diagram
+```
+[ Client ] → [ API Endpoints ] → [ MongoDB Database ]
+```
+
